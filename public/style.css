@@ -1,0 +1,182 @@
+/*Diseños y estilos visuales del panel*/
+:root { /* Variables de color para el tema de la aplicación */
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --border-color: #e2e8f0;
+    --success-bg: #dcfce7;
+    --success-text: #15803d;
+    --danger-bg: #fee2e2;
+    --danger-text: #b91c1c;
+}
+
+* { /* Reset de márgenes y paddings, y box-sizing para todos los elementos */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body { /* Estilos generales del cuerpo de la página*/
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 30px 20px;
+}
+
+.container {/* Contenedor principal centrado y con ancho máximo */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {/* Estilos del encabezado de la aplicación */
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+header h1 {/* Estilos del título principal */
+    font-size: 2.2rem;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+header p {/* Estilos del subtítulo */
+    color: #64748b;
+    font-size: 1rem;
+}
+
+.grid-layout {/* Estilos para el layout de dos columnas */
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.card {/* Estilos de las tarjetas de contenido */
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
+}
+
+.card h2 {/* Estilos de los títulos dentro de las tarjetas */
+    font-size: 1.3rem;
+    color: #334155;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-group {/* Estilos de los grupos de formulario */
+    margin-bottom: 18px;
+}
+
+.form-group label {/* Estilos de las etiquetas de los campos de formulario */
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea { /* Estilos de los campos de entrada, select y textarea */
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+}
+/* Estilos de enfoque para los campos de formulario */
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+/* Estilos del botón principal */
+.btn-primary {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+/* Estilos del botón principal al pasar el mouse */
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+/* Estilos de la tabla de citas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+/* Estilos de las celdas de la tabla */
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+/* Estilos de los encabezados de la tabla */
+th {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+/* Estilos de las celdas de la tabla */
+td {
+    font-size: 0.95rem;
+}
+/* Estilos de las filas de la tabla al pasar el mouse */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+/* Estilos de las filas de la tabla al pasar el mouse */
+.badge-programada {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+}
+/* Estilos de las filas de la tabla al pasar el mouse */
+.badge-cancelada {
+    background-color: var(--danger-bg);
+    color: var(--danger-text);
+}
+/* Estilos del botón de cancelar cita */
+.btn-cancel {
+    background-color: var(--danger-bg);
+    color: var(--danger-text);
+    border: 1px solid #fca5a5;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+/* Estilos del botón de cancelar cita al pasar el mouse */
+.btn-cancel:hover {
+    background-color: #f87171;
+    color: white;
+}

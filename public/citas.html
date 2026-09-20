@@ -1,0 +1,98 @@
+<!-- Estructura de la interfaz gráfica (UI) -->
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Citas Médicas</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <div class="container"> <!-- Contenedor principal de la aplicación -->
+        <header style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>🏥 Agendamiento de Citas Médicas</h1>
+                <p>Módulo de Agendamiento de citas</p>
+            </div>
+            <button id="btnLogout" class="btn-primary" style="background-color: #dc3545; max-width: 150px;">Cerrar Sesión</button>
+        </header>
+
+        <main class="grid-layout"> <!-- Diseño de la interfaz en cuadrícula -->             
+            <!-- Formulario de Agendamiento -->
+            <section class="card"> <!-- Tarjeta de formulario -->
+                <h2>Agendar Nueva Cita</h2>
+                <form id="formCita">
+                    <div class="form-group">
+                        <label for="paciente">Nombre del Paciente:</label>
+                        <input type="text" id="paciente" required placeholder="Ej: Juan Pérez">
+                    </div>
+
+                    <div class="form-group"> <!-- Grupo de selección de médico -->
+                        <label for="medico">Médico / Especialidad:</label>
+                        <select id="medico" required>
+                            <option value="">Seleccione un médico</option>
+                            <option value="Dra. María Gómez - Medicina General">Dra. María Gómez - Medicina General</option>
+                            <option value="Dr. Carlos Ruiz - Cardiología">Dr. Carlos Ruiz - Cardiología</option>
+                            <option value="Dra. Laura Cano - Pediatría">Dra. Laura Cano - Pediatría</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group"> <!-- Grupo de selección de fecha y hora -->
+                        <label for="fechaHora">Fecha y Hora:</label>
+                        <input type="datetime-local" id="fechaHora" required>
+                    </div>
+
+                    <div class="form-group"> <!-- Grupo de motivo de consulta -->
+                        <label for="motivo">Motivo de Consulta:</label>
+                        <textarea id="motivo" rows="3" placeholder="Descripción breve..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Agendar Cita</button>
+                </form>
+            </section>
+
+            <!-- Listado de Citas y Notificaciones -->
+            <section class="card">
+                <h2>Citas Programadas</h2>
+                <table id="tablaCitas">
+                    <thead>
+                        <tr><!-- Encabezados de la tabla de citas -->
+                            <th>ID</th>
+                            <th>Paciente</th>
+                            <th>Médico</th>
+                            <th>Fecha/Hora</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="citasBody"> <!-- Cuerpo de la tabla de citas -->
+                        <!-- Se puebla dinámicamente con JavaScript -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+   
+    <script>
+        // Control de Acceso: Validar autenticación
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            
+            // Si no existe token, redirigir al formulario de inicio de sesión
+            if (!token) {
+                window.location.href = '/index.html';
+            }
+
+            // Listener para cerrar sesión
+            document.getElementById('btnLogout').addEventListener('click', () => {
+                localStorage.removeItem('token');
+                window.location.href = '/index.html';
+            });
+        });
+    </script>
+    <!-- Carga del cliente como Módulo ES6 -->
+    <script type="module" src="app.js"></script>
+
+</body>
+</html>

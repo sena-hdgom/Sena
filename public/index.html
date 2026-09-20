@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Sistema de Citas Médicas</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f4f7f6;
+    }
+    .login-container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 380px;
+    }
+    .login-container h2 {
+      text-align: center;
+      color: #0066cc;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-submit:hover {
+      background-color: #0052a3;
+    }
+    .error-msg {
+      color: #721c24;
+      background-color: #f8d7da;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 15px;
+      display: none;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h2>🏥 Iniciar Sesión</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Correo Electrónico:</label>
+        <input type="email" id="email" required placeholder="paciente@sena.edu.co">
+      </div>
+      <div class="form-group">
+        <label>Contraseña:</label>
+        <input type="password" id="password" required placeholder="••••••">
+      </div>
+      <button type="submit" class="btn-submit">Ingresar</button>
+    </form>
+    <div id="errorMessage" class="error-msg"></div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorDiv = document.getElementById('errorMessage');
+
+      errorDiv.style.display = 'none';
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Guardar el Token JWT retornado por Node.js
+          localStorage.setItem('token', data.token);
+          // Redirigir al módulo de agendamiento de citas
+          window.location.href = '/citas.html';
+        } else {
+          errorDiv.textContent = data.mensaje || 'Credenciales incorrectas';
+          errorDiv.style.display = 'block';
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Error al conectar con el servidor';
+        errorDiv.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
