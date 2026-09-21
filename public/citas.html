@@ -1,11 +1,13 @@
 <!-- Estructura de la interfaz gráfica (UI) -->
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión de Citas Médicas</title>
     <link rel="stylesheet" href="style.css"/>
+    <!-- Importamos los estilos del chatbot -->
+    <link rel="stylesheet" href="chatbot.css"/>
 </head>
 <body>
     <div class="container"> <!-- Contenedor principal de la aplicación -->
@@ -17,9 +19,9 @@
             <button id="btnLogout" class="btn-primary" style="background-color: #dc3545; max-width: 150px;">Cerrar Sesión</button>
         </header>
 
-        <main class="grid-layout"> <!-- Diseño de la interfaz en cuadrícula -->             
+        <main class="grid-layout"> <!-- Diseño de la interfaz en cuadrícula -->            
             <!-- Formulario de Agendamiento -->
-            <section class="card"> <!-- Tarjeta de formulario -->
+            <section class="card">
                 <h2>Agendar Nueva Cita</h2>
                 <form id="formCita">
                     <div class="form-group">
@@ -27,7 +29,7 @@
                         <input type="text" id="paciente" required placeholder="Ej: Juan Pérez">
                     </div>
 
-                    <div class="form-group"> <!-- Grupo de selección de médico -->
+                    <div class="form-group">
                         <label for="medico">Médico / Especialidad:</label>
                         <select id="medico" required>
                             <option value="">Seleccione un médico</option>
@@ -37,12 +39,12 @@
                         </select>
                     </div>
 
-                    <div class="form-group"> <!-- Grupo de selección de fecha y hora -->
+                    <div class="form-group">
                         <label for="fechaHora">Fecha y Hora:</label>
                         <input type="datetime-local" id="fechaHora" required>
                     </div>
 
-                    <div class="form-group"> <!-- Grupo de motivo de consulta -->
+                    <div class="form-group">
                         <label for="motivo">Motivo de Consulta:</label>
                         <textarea id="motivo" rows="3" placeholder="Descripción breve..." required></textarea>
                     </div>
@@ -56,7 +58,7 @@
                 <h2>Citas Programadas</h2>
                 <table id="tablaCitas">
                     <thead>
-                        <tr><!-- Encabezados de la tabla de citas -->
+                        <tr>
                             <th>ID</th>
                             <th>Paciente</th>
                             <th>Médico</th>
@@ -65,7 +67,7 @@
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="citasBody"> <!-- Cuerpo de la tabla de citas -->
+                    <tbody id="citasBody">
                         <!-- Se puebla dinámicamente con JavaScript -->
                     </tbody>
                 </table>
@@ -73,25 +75,45 @@
         </main>
     </div>
 
-   
+    <!-- ================= ESTRUCTURA HTML DEL CHATBOT ================= -->
+    <div id="citgo-chatbot-container">
+      <div id="chatbot-box">
+        <div class="chat-header">
+          <span>🩺 Asistente Virtual CitGo</span>
+          <button onclick="toggleCitgoChat()" style="background:transparent; border:none; color:white; font-size:16px; cursor:pointer;">✕</button>
+        </div>
+        <div class="chat-messages" id="citgoMessages">
+          <div class="chat-message bot">
+            ¡Hola! 👋 Soy el asistente virtual de <b>CitGo</b>. ¿En qué te puedo ayudar hoy? (Prueba: <i>agendar</i>, <i>médicos</i>, <i>horarios</i>)
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="citgoInput" placeholder="Escribe tu consulta..."/>
+          <button onclick="sendCitgoMessage()">Enviar</button>
+        </div>
+      </div>
+
+      <button id="chatbot-toggle-btn" onclick="toggleCitgoChat()">💬</button>
+    </div>
+
     <script>
         // Control de Acceso: Validar autenticación
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             
-            // Si no existe token, redirigir al formulario de inicio de sesión
             if (!token) {
                 window.location.href = '/index.html';
             }
 
-            // Listener para cerrar sesión
             document.getElementById('btnLogout').addEventListener('click', () => {
                 localStorage.removeItem('token');
                 window.location.href = '/index.html';
             });
         });
     </script>
-    <!-- Carga del cliente como Módulo ES6 -->
+    
+    <!-- Cargamos los módulos JavaScript -->
+    <script src="chatbot.js"></script>
     <script type="module" src="app.js"></script>
 
 </body>
