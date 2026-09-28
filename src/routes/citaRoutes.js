@@ -1,53 +1,24 @@
-// Rutas de Citas Médicas
+// Rutas de Citas Médicas - citaRoutes.js
 import express from 'express';
-// Si tienes un controlador separado, impórtalo aquí. 
-// Si manejas la lógica dentro de la ruta, aquí están definidas las peticiones:
+import { 
+  getCitas, 
+  createCita, 
+  cancelarCita, 
+  deleteCita 
+} from '../controllers/citaController.js';
 
 const router = express.Router();
 
-// 1. GET /api/citas -> Obtener todas las citas
-router.get('/', async (req, res) => {
-  try {
-    // Si usas PostgreSQL vía controller o query directo:
-    // Sustituye esta parte con la llamada a tu BD o controlador si ya existe
-    res.status(200).json([
-      // Arreglo de citas desde tu BD
-    ]);
-  } catch (error) {
-    res.status(500).json({ mensaje: 'Error al obtener las citas' });
-  }
-});
+// 1. GET /api/citas -> Obtener todas las citas (200 OK)
+router.get('/', getCitas);
 
-// 2. POST /api/citas -> Guardar una nueva cita
-router.post('/', async (req, res) => {
-  try {
-    const { paciente, medico, fechaHora, motivo } = req.body;
-    
-    // Aquí ejecutas la inserción en PostgreSQL
-    // Ejemplo: const result = await pool.query(...)
+// 2. POST /api/citas -> Crear/Programar una nueva cita (201 Created / 400 Bad Request)
+router.post('/', createCita);
 
-    res.status(201).json({ 
-      success: true, 
-      id: Date.now(), // O el ID retornado por PostgreSQL
-      mensaje: 'Cita guardada exitosamente' 
-    });
-  } catch (error) {
-    console.error('Error en POST /api/citas:', error);
-    res.status(500).json({ success: false, mensaje: 'Error interno del servidor' });
-  }
-});
+// 3. PUT /api/citas/:id/cancelar -> Cancelar el estado de una cita (200 OK / 404 Not Found)
+router.put('/:id/cancelar', cancelarCita);
 
-// 3. PUT /api/citas/:id/cancelar -> Cancelar una cita
-router.put('/:id/cancelar', async (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    // Aquí ejecutas el UPDATE en PostgreSQL para cambiar el estado a 'CANCELADA'
-
-    res.status(200).json({ success: true, mensaje: `Cita #${id} cancelada` });
-  } catch (error) {
-    res.status(500).json({ success: false, mensaje: 'Error al cancelar la cita' });
-  }
-});
+// 4. DELETE /api/citas/:id -> Eliminar una cita por su ID (200 OK / 404 Not Found)
+router.delete('/:id', deleteCita);
 
 export default router;

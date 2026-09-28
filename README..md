@@ -110,3 +110,107 @@ Al enviar JSON.stringify(nuevaCita), Express recibe un cuerpo con la misma estru
 ## Pruebas
 # iniciar el servidor con pnpm start
 ingresar usuario (paciente@sena.edu.co) y contraseña(123456)
+---------------------------------------------------------------------
+## Integración del Chatbot en citas.html
+--------------------------------------------------------------
+## fallos de autenticación 401 Unauthorized, respuestas de éxito con JWT (200 OK) y el control de excepciones imprevistas (500 Internal Server Error)
+
+# A. Importación de Servicios: 
+Trae (importa) las funciones SQL que creamos en la capa de servicio (citaServices.js). y el controlador no tenga que escribir SQL directo (SELECT, INSERT), sino simplemente llamar a estas funciones.
+
+    import { 
+        obtenerTodasLasCitas, 
+        crearNuevaCita, 
+        eliminarCitaPorId 
+    } from '../services/citaServices.js';
+
+# B. Obtener la lista de citas (getCitas):
+# req (Request / Petición): 
+Trae la información que envía el cliente desde la web.
+# res (Response / Respuesta):
+Es el objeto que usamos para enviarle la respuesta al navegador.
+# await obtenerTodasLasCitas():
+Le dice a la base de datos PostgreSQL: "Tráeme todas las citas registradas".
+# res.status(200).json(citas): 
+Devuelve el código de estado HTTP 200 OK (Petición exitosa estándar) junto con la lista de citas en formato JSON.   
+# try / catch: 
+Si la base de datos se cae o ocurre un fallo imprevisto, salta al catch y envía un código 500 Internal Server Error
+
+    export const getCitas = async (req, res) => {
+    try {
+        const citas = await obtenerTodasLasCitas();
+        return res.status(200).json(citas);
+    } catch (error) {
+        return res.status(500).json({ 
+        mensaje: 'Error interno al obtener las citas', 
+        error: error.message 
+        });
+    }
+    };
+
+# C. Función 2: Agendar una nueva cita (createCita) 
+# req.body: 
+Extrae los datos que el usuario escribió en el formulario HTML (paciente, medico, fechaHora, motivo).
+# if (!paciente || !medico || !fechaHora): 
+Valida que los campos requeridos no vengan vacíos. Si el usuario intenta enviar el formulario sin llenar el paciente, detiene la ejecución inmediatamente y responde con un código 400 Bad Request (Error de validación del cliente).   
+# res.status(201):
+Si la inserción en PostgreSQL fue exitosa, responde con el código 201 Created (Nuevo recurso creado)
+
+    export const createCita = async (req, res) => {
+    const { paciente, medico, fechaHora, motivo } = req.body;
+
+    // 1. Validación de cliente
+    if (!paciente || !medico || !fechaHora) {
+        return res.status(400).json({ 
+        mensaje: 'Los campos paciente, médico y fecha/hora son obligatorios' 
+        });
+    }
+
+    try {
+        // 2. Inserción en BD
+        const nuevaCita = await crearNuevaCita({ paciente, medico, fechaHora, motivo });
+        
+        // 3. Respuesta de éxito
+        return res.status(201).json({
+        mensaje: 'Cita programada con éxito',
+        cita: nuevaCita
+        });
+    } catch (error) {
+        return res.status(500).json({ 
+        mensaje: 'Error interno al agendar la cita', 
+        error: error.message 
+        });
+    }
+    };
+
+# D. Función 3: Cancelar / Eliminar una cita (deleteCita)
+
+export const deleteCita = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const resultado = await eliminarCitaPorId(id);
+
+    if (!resultado) {
+      return res.status(404).json({ 
+        mensaje: `No se encontró la cita médica con el ID ${id}` 
+      });
+    }
+
+    return res.status(200).json({ 
+      mensaje: 'Cita médica cancelada/eliminada exitosamente' 
+    });
+  } catch (error) {
+    return res.status(500).json({ 
+      mensaje: 'Error interno al eliminar la cita', 
+      error: error.message 
+    });
+  }
+};
+
+# req.params.id: 
+Captura el ID enviado a través de la URL de la petición (por ejemplo, en DELETE /api/citas/5, el ID es 5).
+# if (!resultado): 
+Si el ID enviado no existe en la base de datos PostgreSQL, responde con un código 404 Not Found (El recurso solicitado no existe). 
+# res.status(200): 
+Si la cita existía y se borró de la tabla, confirma el éxito con 200 OK.   
